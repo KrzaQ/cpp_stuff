@@ -1,0 +1,7 @@
+* text eol=lf
+
+*.d text
+*.di text
+*.json text
+*.md text
+
