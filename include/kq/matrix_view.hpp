@@ -150,7 +150,7 @@ struct iterator
 
     iterator operator--(int) {
         auto copy = *this;
-        *this += 1;
+        *this -= 1;
         return copy;
     }
 
