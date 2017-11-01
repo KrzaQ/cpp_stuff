@@ -295,19 +295,13 @@ struct matrix_view
     }
 
     T& operator()(coord_t coordinates) {
-#ifdef DEBUG
-        if(!verify_coordinates(coordinates))
-            throw std::runtime_error("incorrect coordinates");
-#endif
+        assert_coordinates(coordinates);
         auto offset = detail::matrix::calc_final_offset(sizes, coordinates);
         return data[offset];
     }
 
     T const& operator()(coord_t coordinates) const {
-#ifdef DEBUG
-        if(!verify_coordinates(coordinates))
-            throw std::runtime_error("incorrect coordinates");
-#endif
+        assert_coordinates(coordinates);
         auto offset = detail::matrix::calc_final_offset(sizes, coordinates);
         return data[offset];
     }
@@ -319,14 +313,15 @@ struct matrix_view
 
 protected:
 
-    bool verify_coordinates(coord_t const& coord) const {
+    void assert_coordinates(coord_t const& coord) const {
+#ifdef DEBUG
         if(coord.size() != sizes.size())
-            return false;
+            throw std::runtime_error("incorrect coordinates (size mismatch)");
         for(size_t i{}; i < sizes.size(); ++i){
             if(coord[i] >= sizes[i] || coord[i] < 0)
-                return false;
+                throw std::runtime_error("incorrect coordinates (out of range)");
         }
-        return true;
+#endif
     }
 
     T* data;
